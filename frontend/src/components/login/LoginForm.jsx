@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import { TextField, Typography } from "@mui/material";
+import { Grid, TextField, Typography } from "@mui/material";
 import Button from '@mui/material/Button';
 
 const LoginForm = () => {
@@ -37,7 +37,8 @@ const LoginForm = () => {
 
   return (
     <div>
-      <Box component="form" onSubmit={submitHandler} >
+      <Box component="form" onSubmit={submitHandler} sx={{backgroundColor: "ButtonHighlight", display: "flex", justifyContent: "center" }} >
+        <Grid sx={{display:"flex",alignItems: "center"}}>
         <TextField
           sx={{ m: 2 }}
           id="email"
@@ -60,6 +61,8 @@ const LoginForm = () => {
           onChange={changeHandler}
         />
          <Button variant="contained" type="submit">Send</Button>
+
+        </Grid>
       </Box>
       {error && <Typography>error</Typography>}
     </div>
