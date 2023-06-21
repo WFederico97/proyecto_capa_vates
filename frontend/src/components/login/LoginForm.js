@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import { TextField, Typography } from "@mui/material";
 import Button from '@mui/material/Button';
+import AuthContext from "../../context/AuthContext.js";
 
 const LoginForm = () => {
 //   const [emailChecked, setEmailChecked] = useState(false);
@@ -11,6 +12,8 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+
+  const ctxAuth = useContext(AuthContext)
 
   const changeHandler = (event) => {
     setFormData({
@@ -26,9 +29,10 @@ const LoginForm = () => {
   const submitHandler = (event) =>{
     event.preventDefault()
     if(formData.email.includes('@') && formData.password.length > 0){
-        /**HTTP BACKEND LOGIN CALL */
-        console.log(formData)
-        setError(false)
+      /**HTTP BACKEND LOGIN CALL */
+      ctxAuth.login(formData)
+      console.log(formData)
+      setError(false)
     }else{
         setError(true)
     }
@@ -40,7 +44,7 @@ const LoginForm = () => {
       <Box component="form" onSubmit={submitHandler} >
         <TextField
           sx={{ m: 2 }}
-          id="email"
+          id="emailLogin"
           label="Email"
           name="email"
           variant="filled"
@@ -51,7 +55,7 @@ const LoginForm = () => {
 
         <TextField
           sx={{ m: 2 }}
-          id="password"
+          id="passwordLogin"
           label="Password"
           variant="filled"
           name="password"

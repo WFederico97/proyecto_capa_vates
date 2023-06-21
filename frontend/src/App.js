@@ -1,13 +1,27 @@
-import LoginForm from './components/login/loginform/LoginForm.jsx';
+import LoginForm from './components/login/LoginForm.js';
+import Register from './components/register/Register.js';
+
 import './App.css';
+import { Box, Grid } from '@mui/material';
+import { useContext } from 'react';
+import AuthContext from './context/AuthContext.js';
 
 function App() {
+
+  const ctxAuth = useContext(AuthContext)
   return (
-    <div className="App">
+    <Box component="div" sx={{ display: "flex", flexDirection: "column", alignContent: "center" }}>
+      <header>
+        <Grid component="header">
+          {!ctxAuth.isAuth && <LoginForm />}
+        </Grid>
+      </header>
       <main className="App-main">
-        <LoginForm />
+        <Grid component="section">
+          <Register />
+        </Grid>
       </main>
-    </div>
+    </Box>
   );
 }
 

@@ -1,4 +1,6 @@
-const authContext = createContext(
+import { createContext } from "react";
+
+const AuthContext = createContext(
     {
         userData: {},
         isAuth: false,
@@ -6,3 +8,6 @@ const authContext = createContext(
         register : () => {},
     }
 );
+
+export default AuthContext;
+
