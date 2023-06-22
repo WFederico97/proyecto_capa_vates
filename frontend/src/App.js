@@ -1,5 +1,5 @@
 import LoginForm from './components/login/LoginForm.jsx';
-import Register from './components/register/register.jsx';
+import Register from './components/register/Register.jsx';
 
 import './App.css';
 import { Box, Grid } from '@mui/material';

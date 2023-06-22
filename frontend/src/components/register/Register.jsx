@@ -6,12 +6,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
+/**
+      *! ToDO: ver react-hook-form para validacion de formularios.
+ */
+
 const Register = () => {
   const [error, setError] = useState(false);
   const [userData, setUserData] = useState({})
 
   const changeHandler = (event) => {
-
+ 
   }
 
   const submitHandler = (event) => {
