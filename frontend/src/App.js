@@ -7,10 +7,12 @@ import { Box, Grid } from '@mui/material';
 function App() {
   return (
     <Box component="div" sx={{ display: "flex", flexDirection: "column", alignContent: "center" }}>
-      <main className="App-main">
+      <header>
         <Grid component="header">
           <LoginForm />
         </Grid>
+      </header>
+      <main className="App-main">
         <Grid component="section">
           <Register />
         </Grid>
