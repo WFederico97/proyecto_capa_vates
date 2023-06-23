@@ -45,6 +45,7 @@ const Register = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({
     defaultValues,
     mode: "onSubmit",
@@ -54,7 +55,7 @@ const Register = () => {
   const onSubmit = () => {
     console.log("Creacion exitosa");
   };
-
+  console.log(errors)
   return (
     <>
         <Grid sx={{ textAlign: "center" }}>
@@ -66,10 +67,10 @@ const Register = () => {
               <Controller
                 name="first_name"
                 control={control}
-                render={({ field }) => <TextField label="First Name" type="text" sx={{ margin: 1 }} {...field} />}
+                render={({ field }) => <TextField c label="First Name" type="text" sx={{ margin: 1 }} {...field} />}
               />
               {errors.first_name && (
-                <Typography variant="caption">{errors.first_name}</Typography>
+                <Typography variant="caption">{errors.first_name.message}</Typography>
               )}
               <Controller
                 name="last_name"
@@ -77,7 +78,7 @@ const Register = () => {
                 render={({ field }) => <TextField label="Last Name" type="text" sx={{ margin: 1 }} {...field} />}
               />
               {errors.last_name && (
-                <Typography variant="caption">{errors.last_name}</Typography>
+                <Typography variant="caption">{errors.last_name.message}</Typography>
               )}
             </Grid>
             <Grid sx={{ margin: 1 }}>
@@ -87,7 +88,7 @@ const Register = () => {
                 render={({ field }) => <TextField label="Email" type="email" sx={{ margin: 1, width: "97%" }} {...field} />}
               />
               {errors.email && (
-                <Typography variant="caption">{errors.email}</Typography>
+                <Typography variant="caption">{errors.email.message}</Typography>
               )}
             </Grid>
             <Grid sx={{ margin: 1 }}>
@@ -98,7 +99,7 @@ const Register = () => {
                 
               />
               {errors.password && (
-                <Typography variant="caption">{errors.password}</Typography>
+                <Typography variant="caption">{errors.password.message}</Typography>
               )}
               <Controller
                 name="confirm_password"
@@ -106,7 +107,7 @@ const Register = () => {
                 render={({ field }) => <TextField label="Confirm Password" sx={{ margin: 1 }} type="password"  {...field} />}
               />
               {errors.confirm_password && (
-                <Typography variant="caption">{errors.confirm_password}</Typography>
+                <Typography variant="caption">{errors.confirm_password.message}</Typography>
               )}
             </Grid>
             <Grid>
@@ -118,7 +119,7 @@ const Register = () => {
               >
                 Register
               </Button>
-              <Button sx={{ margin: 1 }} variant="contained" color="warning">
+              <Button sx={{ margin: 1 }} variant="contained" color="warning" onClick={()=> reset()}>
                 Cancel
               </Button>
             </Grid>
