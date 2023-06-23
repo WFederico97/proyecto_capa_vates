@@ -3,6 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {  Button, Grid, TextField, Typography } from "@mui/material";
+import './Register.css'
 
 const defaultValues = {
   first_name: "",
@@ -59,7 +60,7 @@ const Register = () => {
         <Grid sx={{ textAlign: "center" }}>
           <Typography variant="h3"> Register </Typography>
         </Grid>
-        <Grid>
+        <Grid sx={{justifyContent: "center", display: "flex", m:1}}>
           <form onSubmit={handleSubmit(onSubmit)} className="register-form">
             <Grid sx={{ margin: 1 }}>
               <Controller
@@ -83,7 +84,7 @@ const Register = () => {
               <Controller
                 name="email"
                 control={control}
-                render={({ field }) => <TextField label="Email" type="email" sx={{ margin: 1, width: "37%" }} {...field} />}
+                render={({ field }) => <TextField label="Email" type="email" sx={{ margin: 1, width: "97%" }} {...field} />}
               />
               {errors.email && (
                 <Typography variant="caption">{errors.email}</Typography>

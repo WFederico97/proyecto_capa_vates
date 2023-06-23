@@ -1,0 +1,9 @@
+.register-form {
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    flex-wrap: wrap;
+    align-content: center;
+    box-shadow:  1em 1.3em 1em #000000;
+    background-color: #8680803c;
+}
