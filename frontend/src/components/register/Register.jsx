@@ -48,7 +48,7 @@ const Register = () => {
     reset
   } = useForm({
     defaultValues,
-    mode: "onSubmit",
+    mode: "all",
     resolver: yupResolver(formSchema),
   });
 

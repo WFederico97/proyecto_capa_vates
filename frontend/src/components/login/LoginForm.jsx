@@ -28,7 +28,7 @@ const LoginForm = () => {
 
   const {control,handleSubmit,formState: { errors }} = useForm({
     defaultValues,
-    mode: "onSubmit",
+    mode: "all",
     resolver: yupResolver(formSchema)
   })
 
@@ -54,7 +54,7 @@ const LoginForm = () => {
           <Controller 
           name="password"
           control={control}
-          render={({field}) => <TextField label="Password" {...field} />}
+          render={({field}) => <TextField type="password" label="Password" {...field} />}
           />
           {errors.password && <Typography>{errors.password.message}</Typography>}
 
