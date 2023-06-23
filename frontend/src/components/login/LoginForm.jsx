@@ -40,26 +40,25 @@ const LoginForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}  >
-        <Grid sx={{display:"flex",alignItems: "center"}}>
+      <form onSubmit={handleSubmit(onSubmit)} className="login-form"  >
+        <Grid sx={{display:"flex",alignItems: "center", m: 1}}>
           <Controller 
           name="email"
           control={control}
-          render={({field}) => <TextField {...field} />}
+          render={({field}) => <TextField sx={{m:1}} label="email" {...field} />}
           
-          {errors.email && <Typography>{errors.email.message}</Typography>}
           
           />
+          {errors.email && <Typography>{errors.email.message}</Typography>}
+
           <Controller 
           name="password"
           control={control}
-          render={({field}) => <TextField {...field} />}
-          
-          {errors.password && <Typography>{errors.password.message}</Typography>}
-          
+          render={({field}) => <TextField label="Password" {...field} />}
           />
+          {errors.password && <Typography>{errors.password.message}</Typography>}
 
-         <Button variant="contained" type="submit">Send</Button>
+         <Button variant="contained" type="submit" sx={{m:1}}>Send</Button>
         </Grid>
       </form>
     </>
