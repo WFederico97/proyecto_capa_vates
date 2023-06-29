@@ -1,179 +1,180 @@
-import React, { useState } from "react";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
+import React from "react";
+import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  Button,
+  Card,
+  CardAction,
+  CardActions,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
+import "./Register.css";
 
-/**
-      *! ToDO: ver react-hook-form para validacion de formularios.
- */
+const defaultValues = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  password: "",
+  confirm_password: "",
+};
+
+const formSchema = yup.object({
+  first_name: yup
+    .string()
+    .trim()
+    .min(3, "Ingresar al menos 3 caracteres")
+    .required("Campo Obligatorio"),
+  last_name: yup
+    .string()
+    .trim()
+    .min(3, "Ingresar al menos 3 caracteres")
+    .required("Campo Obligatorio"),
+  email: yup
+    .string()
+    .trim()
+    .email("Email no valido")
+    .required("Campo Obligatorio"),
+  password: yup
+    .string()
+    .trim()
+    .min(5, "La contraseña debe ser minimo 5 caracteres")
+    .required("Campo Obligatorio"),
+  confirm_password: yup
+    .string()
+    .required()
+    .oneOf([yup.ref("password")], "Passwords must match"),
+});
 
 const Register = () => {
-  const [error, setError] = useState({});
-  const [userData, setUserData] = useState({
-    name: "",
-    lastName: "",
-    email: "",
-    genderInput: "female",
-    password: "",
-    confirmPass: "",
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    defaultValues,
+    mode: "all",
+    resolver: yupResolver(formSchema),
   });
-  const { name, lastName, email, genderInput, password, confirmPass } =
-    userData;
-  // const [formIsValid, setFormIsValid] = useState()
-  const changeHandler = (event) => {
-<<<<<<< HEAD
- 
-  }
-=======
-    setUserData({ ...userData, [event.target.name]: event.target.value });
-  };
->>>>>>> c82e380502c29d00b939bda4f80534460cb8e6de
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-    const validationErrors = formValidation();
-    if (Object.keys(validationErrors).length > 0) {
-      setError(validationErrors);
-      console.log("entré");
-    } else {
-      /*llamado hnttp con el try catch al bk */
-      console.log("STATUS 200 OK");
-    }
+  const onSubmit = () => {
+    console.log("Creacion exitosa");
   };
 
-  const formValidation = () => {
-    const validationErrors = {};
-    if (name.trim().length < 4) {
-      validationErrors.name = "Nombre no puede ser menor a 4 caracteres";
-    }
-    if (lastName.trim().length < 4) {
-      validationErrors.lastName = "Apellido no puede ser  menor a 4 caracteres";
-    }
-    if (!email.trim()) {
-      validationErrors.email = "Email no puede ser vacio";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      validationErrors.email = "Email invalido";
-    }
-    if (!password.trim()) {
-      validationErrors.password = "Contraseña no puede ser vacia";
-    }
-    if (password !== confirmPass) {
-      validationErrors.equalPassword = "Las contraseñas no coinciden";
-    }
-    return validationErrors;
-  };
-
-  console.log(userData);
   return (
     <>
-      <Box
-        component="div"
-        sx={{ display: "flex", flexDirection: "column", p: 1 }}
-      >
-        <Grid sx={{ textAlign: "center" }}>
-          <Typography variant="h3"> Register </Typography>
-        </Grid>
-        <Grid>
-          <Box component="form" onSubmit={submitHandler} sx={{ margin: "1em" }}>
+      <Grid sx={{ textAlign: "center" }}>
+        <Typography variant="h3"> Register </Typography>
+      </Grid>
+      <Grid sx={{ justifyContent: "center", display: "flex", m: 1 }}>
+        <Card>
+          <form onSubmit={handleSubmit(onSubmit)} className="register-form">
             <Grid sx={{ margin: 1 }}>
-              <TextField
-                sx={{ margin: 1 }}
-                id="name"
-                label="Name"
-                variant="filled"
-                color="secondary"
-                type="text"
-                name="name"
-                onChange={changeHandler}
+              <Controller
+                name="first_name"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    c
+                    label="First Name"
+                    type="text"
+                    sx={{ margin: 1 }}
+                    {...field}
+                  />
+                )}
               />
-              {error.name && (
-                <Typography variant="caption">{error.name}</Typography>
+              {errors.first_name && (
+                <Grid>
+                  <Typography variant="caption">
+                    {errors.first_name.message}
+                  </Typography>
+                </Grid>
               )}
-              <TextField
-                sx={{ margin: 1 }}
-                id="lastName"
-                label="Last Name"
-                variant="filled"
-                color="secondary"
-                type="text"
-                name="lastName"
-                onChange={changeHandler}
+              <Controller
+                name="last_name"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    label="Last Name"
+                    type="text"
+                    sx={{ margin: 1 }}
+                    {...field}
+                  />
+                )}
               />
-              {error.lastName && (
-                <Typography variant="caption">{error.lastName}</Typography>
+              {errors.last_name && (
+                <Grid>
+                <Typography variant="caption">
+                  {errors.last_name.message}
+                </Typography>
+                </Grid>
               )}
             </Grid>
             <Grid sx={{ margin: 1 }}>
-              <FormControl
-                color="secondary"
-                margin="dense"
-                sx={{ mr: "2.3em", ml: "1em" }}
-              >
-                <FormLabel id="gender-input">Gender</FormLabel>
-                <RadioGroup
-                  aria-labelledby="genderInput"
-                  defaultValue="female"
-                  name="genderInput"
-                  row
-                  onChange={changeHandler}
-                >
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female"
-                    color="secondary"
-                  />
-                  <FormControlLabel
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
-                    color="secondary"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <TextField
-                sx={{ margin: 1 }}
-                id="email"
-                label="Email"
-                variant="filled"
-                color="secondary"
-                type="email"
+              <Controller
                 name="email"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    label="Email"
+                    type="email"
+                    sx={{ margin: 1 }}
+                    {...field}
+                  />
+                )}
               />
-              {error.email && (
-                <Typography variant="caption">{error.email}</Typography>
+              {errors.email && (
+                <Grid>
+                  <Typography variant="caption">
+                    {errors.email.message}
+                  </Typography>
+                </Grid>
               )}
             </Grid>
             <Grid sx={{ margin: 1 }}>
-              <TextField
-                sx={{ margin: 1 }}
-                id="password"
-                label="Password"
-                variant="filled"
-                color="secondary"
-                type="password"
+              <Controller
                 name="password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    label="Password"
+                    sx={{ margin: 1 }}
+                    type="password"
+                    {...field}
+                  />
+                )}
               />
-              {error.password && (
-                <Typography variant="caption">{error.password}</Typography>
+              {errors.password && (
+                <Grid>
+                  <Typography variant="caption">
+                    {errors.password.message}
+                  </Typography>
+                </Grid>
               )}
-              <TextField
-                sx={{ margin: 1 }}
-                id="confirmPass"
-                label="Confirm Password"
-                variant="filled"
-                color="secondary"
-                type="password"
-                name="confirmPass"
+              <Controller
+                name="confirm_password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    label="Confirm Password"
+                    sx={{ margin: 1 }}
+                    type="password"
+                    {...field}
+                  />
+                )}
               />
-              {error.confirmPass && (
-                <Typography variant="caption">{error.equalPassword}</Typography>
+              {errors.confirm_password && (
+                <Grid>
+                <Typography variant="caption">
+                  {errors.confirm_password.message}
+                </Typography>
+                </Grid>
               )}
             </Grid>
-            <Grid>
+            <CardActions>
               <Button
                 sx={{ margin: 1 }}
                 variant="contained"
@@ -182,13 +183,18 @@ const Register = () => {
               >
                 Register
               </Button>
-              <Button sx={{ margin: 1 }} variant="contained" color="warning">
+              <Button
+                sx={{ margin: 1 }}
+                variant="contained"
+                color="warning"
+                onClick={() => reset()}
+              >
                 Cancel
               </Button>
-            </Grid>
-          </Box>
-        </Grid>
-      </Box>
+            </CardActions>
+          </form>
+        </Card>
+      </Grid>
     </>
   );
 };
