@@ -1,13 +1,23 @@
-import LoginForm from './components/login/loginform/LoginForm.jsx';
+import LoginForm from './components/login/LoginForm.jsx';
+import Register from './components/register/Register.jsx';
+
 import './App.css';
+import { Box, Grid } from '@mui/material';
 
 function App() {
   return (
-    <div className="App">
-      <main className="App-main">
-        <LoginForm />
+    <Box component="div" sx={{ display: "flex", flexDirection: "column", alignContent: "center" }}>
+      <header className='App-header'>
+        <Grid component="header">
+          <LoginForm />
+        </Grid>
+      </header>
+      <main>
+        <Grid component="section">
+          <Register />
+        </Grid>
       </main>
-    </div>
+    </Box>
   );
 }
 
