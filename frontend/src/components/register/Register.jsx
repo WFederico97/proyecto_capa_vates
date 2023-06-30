@@ -1,54 +1,84 @@
-import React from "react";
+/* 
+  *NOTAS A TENER EN CUENTA* 
+  ! Importaciones a los nuevos cambios estan en la linea 21 a 23
+  ! 56 a 78 traemos los datos del endpoint y guardamos en estados para utilizarlos en 155 a 163 y 169 a 187
+  ToDo: optimizar codigo , probar endpoints de login y fijarse de aplicarlo con redux
+  ? Antes de pushear a la main, hacer una pr para ver que los cambios no vayan a romper todo!!!
+*/
+
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
   Card,
-  CardAction,
   CardActions,
   Grid,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
 import "./Register.css";
 
+import { getLanguages } from "../../services/cruds/language/language";
+import { getCountries } from "../../services/cruds/country/country";
+import { register } from "../../services/auth/auth";
+
 const defaultValues = {
-  first_name: "",
-  last_name: "",
-  email: "",
-  password: "",
-  confirm_password: "",
+  usr_email: "",
+  usr_password: "",
+  confirm_usr_password: "",
+  usr_address: "",
+  usr_zip: 0,
+  usr_phone: "123456",
+  usr_country_id: 0,
+  usr_language_id: 0,
 };
 
 const formSchema = yup.object({
-  first_name: yup
+  usr_email: yup
     .string()
     .trim()
     .min(3, "Ingresar al menos 3 caracteres")
     .required("Campo Obligatorio"),
-  last_name: yup
+  usr_address: yup
     .string()
     .trim()
     .min(3, "Ingresar al menos 3 caracteres")
     .required("Campo Obligatorio"),
-  email: yup
+  usr_password: yup
     .string()
     .trim()
-    .email("Email no valido")
+    .min(8, "La contraseña debe ser minimo 8 caracteres")
     .required("Campo Obligatorio"),
-  password: yup
-    .string()
-    .trim()
-    .min(5, "La contraseña debe ser minimo 5 caracteres")
-    .required("Campo Obligatorio"),
-  confirm_password: yup
-    .string()
-    .required()
-    .oneOf([yup.ref("password")], "Passwords must match"),
 });
 
 const Register = () => {
+  const [dataCountries, setDataCountries] = useState([]);
+  const [dataLanguages, setDataLanguages] = useState([]);
+  const [isError, setIsError] = useState(false)
+
+
+  useEffect(() => {
+    const getOptionsData = async () => {
+      try{
+        const countries = await getCountries()
+        setDataCountries(countries)
+        const languages = await getLanguages()
+        setDataLanguages(languages)
+        console.log(countries)
+        console.log(languages)
+
+      }catch(error){
+        setIsError(true)
+      }
+    } 
+    getOptionsData()
+
+  }, []);
+
   const {
     control,
     handleSubmit,
@@ -60,8 +90,13 @@ const Register = () => {
     resolver: yupResolver(formSchema),
   });
 
-  const onSubmit = () => {
-    console.log("Creacion exitosa");
+  const onSubmit =  async (data) => {
+    try {
+      await register(data)
+      console.log("registro existoso");
+    }catch (error){
+      console.log(error.response.data.detail)
+    }
   };
 
   return (
@@ -70,111 +105,114 @@ const Register = () => {
         <Typography variant="h3"> Register </Typography>
       </Grid>
       <Grid sx={{ justifyContent: "center", display: "flex", m: 1 }}>
-        <Card>
+      {isError ? <Typography>Error en Base De datos </Typography> : 
+        <Card >
           <form onSubmit={handleSubmit(onSubmit)} className="register-form">
             <Grid sx={{ margin: 1 }}>
               <Controller
-                name="first_name"
+                name="usr_email"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     c
-                    label="First Name"
-                    type="text"
-                    sx={{ margin: 1 }}
-                    {...field}
-                  />
-                )}
-              />
-              {errors.first_name && (
-                <Grid>
-                  <Typography variant="caption">
-                    {errors.first_name.message}
-                  </Typography>
-                </Grid>
-              )}
-              <Controller
-                name="last_name"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    label="Last Name"
-                    type="text"
-                    sx={{ margin: 1 }}
-                    {...field}
-                  />
-                )}
-              />
-              {errors.last_name && (
-                <Grid>
-                <Typography variant="caption">
-                  {errors.last_name.message}
-                </Typography>
-                </Grid>
-              )}
-            </Grid>
-            <Grid sx={{ margin: 1 }}>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <TextField
                     label="Email"
-                    type="email"
+                    type="text"
                     sx={{ margin: 1 }}
                     {...field}
                   />
                 )}
               />
-              {errors.email && (
+              {errors.usr_email && (
                 <Grid>
                   <Typography variant="caption">
-                    {errors.email.message}
+                    {errors.usr_email.message}
+                  </Typography>
+                </Grid>
+              )}
+              <Controller
+                name="usr_address"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    label="Adress"
+                    type="text"
+                    sx={{ margin: 1 }}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.usr_address && (
+                <Grid>
+                  <Typography variant="caption">
+                    {errors.usr_address.message}
                   </Typography>
                 </Grid>
               )}
             </Grid>
-            <Grid sx={{ margin: 1 }}>
+            <Grid sx={{ margin: 1}}>
               <Controller
-                name="password"
+                
+                name="usr_language_id"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onChange={field.onChange} sx={{width:"18vw", marginRight:1.5}}>
+                    {
+                      dataLanguages.map((language) => (
+                        <MenuItem key={language.language_id} value={language.language_id}  >
+                            {language.language_name}
+                        </MenuItem>
+                      ))
+                    }
+                  </Select>
+                )}
+              />
+
+              {errors.usr_language_id && (
+                <Grid>
+                  <Typography variant="caption">
+                    {errors.usr_language_id.message}
+                  </Typography>
+                </Grid>
+              )}
+              <Controller
+                name="usr_country_id"
+                
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onChange={field.onChange} label="Country" sx={{width:"18vw", marginLeft:1.5}} >
+                    {
+                      dataCountries.map((country) => (
+                        <MenuItem key={country.country_id} value={country.country_id} >
+                            {country.country_name}
+                        </MenuItem>
+                      ))
+                    }
+                  </Select>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ margin: 1, display: "flex" }}>
+              <Controller
+                name="usr_password"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     label="Password"
-                    sx={{ margin: 1 }}
+                    sx={{ margin: 1, width:"100%" }}
                     type="password"
                     {...field}
                   />
                 )}
               />
-              {errors.password && (
+              {errors.usr_password && (
                 <Grid>
                   <Typography variant="caption">
-                    {errors.password.message}
+                    {errors.usr_password.message}
                   </Typography>
                 </Grid>
               )}
-              <Controller
-                name="confirm_password"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    label="Confirm Password"
-                    sx={{ margin: 1 }}
-                    type="password"
-                    {...field}
-                  />
-                )}
-              />
-              {errors.confirm_password && (
-                <Grid>
-                <Typography variant="caption">
-                  {errors.confirm_password.message}
-                </Typography>
-                </Grid>
-              )}
             </Grid>
-            <CardActions>
+            <CardActions sx={{display:"flex", justifyContent: "center"}}>
               <Button
                 sx={{ margin: 1 }}
                 variant="contained"
@@ -194,7 +232,9 @@ const Register = () => {
             </CardActions>
           </form>
         </Card>
+      }
       </Grid>
+          
     </>
   );
 };
