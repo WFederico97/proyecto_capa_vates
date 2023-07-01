@@ -1,30 +1,42 @@
-import React from "react";
+/* 
+  ! lineas 45 a 52 es donde se manda username y password al endpoint post de auth/login
+  ! devuelve el error 422 del catch, no manda ni username ni password al endpoint
+  ! se crea el componente login importado en la 15 , donde hacemos el axios.post 
+  ToDo: verificar con BK el endpoint de auth/login y seguir retocando el formulario , button disabled si isLoggedIn es True, etc
+*/
+
+
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Grid, TextField, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 
+import { login } from "../../services/login/login";
+
 const defaultValues = {
-  email: "",
+  username: "",
   password: "",
 };
 
 const formSchema = yup.object({
-  email: yup
+  username: yup
     .string()
     .trim()
-    .email("Email no valido")
+    .email("email no valido")
     .required("Campo Obligatorio"),
 
   password: yup
     .string()
     .trim()
-    .min(5, "La contraseña debe ser minimo 5 caracteres")
+    .min(8, "La contraseña debe ser minimo 8 caracteres")
     .required("Campo Obligatorio"),
 });
 
 const LoginForm = () => {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -35,8 +47,14 @@ const LoginForm = () => {
     resolver: yupResolver(formSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      await login(data);
+      setLoggedIn(true);
+    } catch (error) {
+      setLoggedIn(false);
+      console.log(error.response.data.detail);
+    }
   };
 
   return (
@@ -44,15 +62,17 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="login-form">
         <Grid sx={{ display: "flex", alignItems: "center", m: 1 }}>
           <Controller
-            name="email"
+            name="username"
             control={control}
             render={({ field }) => (
-              <TextField sx={{ m: 1 }} label="email" {...field} />
+              <TextField sx={{ m: 1 }} label="Email" {...field} />
             )}
           />
-          {errors.email && (
+          {errors.username && (
             <Grid>
-              <Typography variant="caption">{errors.email.message}</Typography>
+              <Typography variant="caption">
+                {errors.username.message}
+              </Typography>
             </Grid>
           )}
 
@@ -60,7 +80,7 @@ const LoginForm = () => {
             name="password"
             control={control}
             render={({ field }) => (
-              <TextField type="password" label="Password" {...field} />
+              <TextField type="password" label="password" {...field} />
             )}
           />
           {errors.password && (

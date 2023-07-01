@@ -68,9 +68,6 @@ const Register = () => {
         setDataCountries(countries)
         const languages = await getLanguages()
         setDataLanguages(languages)
-        console.log(countries)
-        console.log(languages)
-
       }catch(error){
         setIsError(true)
       }
@@ -155,7 +152,7 @@ const Register = () => {
                 name="usr_language_id"
                 control={control}
                 render={({ field }) => (
-                  <Select value={field.value} onChange={field.onChange} sx={{width:"18vw", marginRight:1.5}}>
+                  <Select value={field.value} onChange={field.onChange} sx={{width:"18vw", marginRight:1.5}} label="Language">
                     {
                       dataLanguages.map((language) => (
                         <MenuItem key={language.language_id} value={language.language_id}  >
