@@ -111,7 +111,6 @@ const Register = () => {
                 control={control}
                 render={({ field }) => (
                   <TextField
-                    c
                     label="Email"
                     type="text"
                     sx={{ margin: 1 }}
